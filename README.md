@@ -20,7 +20,6 @@ Run the container:
 ```
 $ docker run --rm -it \
          --network host \
-         --privileged=true \
          --name layoutengine-express \
          kcull/layoutengine-express:latest
 ```
