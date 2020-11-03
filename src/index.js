@@ -8,17 +8,24 @@ ws.onmessage = function(msg) {
   const { event, id, message } = parsed_data;
 
   if (event == "receipt") {
-    const my_id = id;
+    console.log(`This WS session ID is: ${id}`);
   }
 
-  if (event == "message") {
-    const parsed_message = JSON.parse(message);
-    const new_html = parsed_message[0];
-    console.log(new_html);
-    document.head.innerHTML = new_html.head;
-    document.body.innerHTML = new_html.body;
+  if (event == "layout-engine") {
+    console.log(
+      `The following layoutEngine message was recieved from WS session ID ${id}: ${message}`
+    );
+    document.head.innerHTML = message.head[0];
+    document.body.innerHTML = message.body[0];
     let layout = calculateLayout(document);
-    console.log(layout);
-    ws.send(layout);
+    const output = { event: "layout-csv", id: id, message: layout };
+    console.log(
+      `The following JSON object will be sent by this WS session: ${output}`
+    );
+    ws.send(JSON.stringify(output));
+  }
+
+  if (event == "disconnect") {
+    console.log(`This WS session ID disconnected: ${id}`);
   }
 };

@@ -56,32 +56,44 @@ wss.on("connection", function connection(ws) {
     } clients connected.`
   );
   ws.send(JSON.stringify({ event: "receipt", id: client_uuid, message: "" }));
-  ws.on("message", function incoming(data) {
+
+  ws.on("message", function messageHandler(data) {
+    /* const parsed_data = JSON.parse(data.data);
+     * const { event, id, message } = parsed_data;
+     * if (event == "get-id") {
+     *   client_list.forEach(client => {
+     *     if (data.ws == client.ws) {
+     *       client.ws.send(client.id);
+     *     }
+     *   });
+     * } else { */
     client_list.forEach(client => {
-      if (
-        // client.id !== new_client.id &&
-        client.ws.readyState === WebSocket.OPEN
-      ) {
-        console.log("Message recieved by server");
-        client.ws.send(
-          JSON.stringify({
-            event: "message",
-            id: new_client.id,
-            message: data
-          })
-        );
+      if (client.ws.readyState === WebSocket.OPEN) {
+        console.log("Message recieved and sent by server");
+        client.ws.send(data);
       }
     });
+    /*     } */
   });
-  ws.on("close", function close() {
+
+  ws.on("close", function closeWS() {
     client_list.forEach((client, i) => {
       if (client.id === new_client.id) {
         console.log(`client ${new_client.id} disconnected`);
         client_list.splice(i, 1);
       }
+      ws.send(
+        JSON.stringify({ event: "disconnect", id: new_client.id, message: "" })
+      );
     });
   });
 });
+
+/* JSON.stringify({
+ *   event: "message",
+ *   id: new_client.id,
+ *   message: data
+ * }) */
 
 /* ws.on("message", message => {
  *   console.log(`Received message: ${message}`);
