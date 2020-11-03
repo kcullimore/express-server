@@ -9,7 +9,7 @@ module.exports = {
   mode: "development",
   devtool: "inline-source-map",
   devServer: {
-    contentBase: path.join(__dirname, "public"),
+    contentBase: path.join(__dirname, "assets"),
     watchContentBase: true,
     host: "0.0.0.0",
     port: 9000,
@@ -21,7 +21,7 @@ module.exports = {
     new HtmlWebPackPlugin({
       template: "./src/index.html",
       filename: "./index.html",
-      favicon: "./public/img/favicon.ico.png"
+      favicon: "./assets/img/favicon.ico.png"
     }),
     new ESLintPlugin()
   ],

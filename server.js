@@ -5,7 +5,8 @@ const body = require("body-parser");
 const cors = require("cors");
 const path = require("path");
 // const fs = require("fs");
-const PUBLIC = path.join(__dirname, "public");
+const PUBLIC = path.join(__dirname, "assets");
+const TMP_DIR = "/tmp";
 // const DIST_DIR = path.join(__dirname, "./dist");
 // const HTML_FILE = path.join(PUBLIC, "/html/input.html");
 
@@ -36,6 +37,7 @@ app.use(cors());
 app.use(body.urlencoded({ extended: true }));
 app.use(body.json());
 app.use(express.static(PUBLIC));
+app.use(express.static(TMP_DIR));
 
 // Setup server on PORT
 const server = app.listen(WS_PORT, function() {
@@ -57,7 +59,7 @@ wss.on("connection", function connection(ws) {
   ws.on("message", function incoming(data) {
     client_list.forEach(client => {
       if (
-        client.id !== new_client.id &&
+        // client.id !== new_client.id &&
         client.ws.readyState === WebSocket.OPEN
       ) {
         console.log("Message recieved by server");
